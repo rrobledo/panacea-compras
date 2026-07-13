@@ -4,32 +4,30 @@ import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, FileText,
   LogOut, Menu, X, ChevronDown, Bell, Search,
-  Package, ClipboardList, ChevronRight, Truck
+  Package, ChevronRight, Truck
 } from 'lucide-react';
 import './layout.css';
 
 const NAV = [
   { label: 'Dashboard', icon: LayoutDashboard, to: '/' },
-  { label: 'Productos', icon: Package, to: '/productos' },
-  { label: 'Programación', icon: ClipboardList, to: '/programacion' },
   {
-    label: 'Compras', icon: Truck, children: [
+    label: 'Maestros', icon: Package, children: [
+      { label: 'Productos', to: '/productos' },
       { label: 'Insumos', to: '/insumos' },
       { label: 'Ítems de Gasto', to: '/items-gasto' },
       { label: 'Proveedores', to: '/proveedores' },
+    ]
+  },
+  {
+    label: 'Compras', icon: Truck, children: [
       { label: 'Órdenes de Compra', to: '/ordenes-compra' },
-      { label: 'Comprobantes', to: '/compras' },
+      { label: 'Registro de Comprobantes', to: '/compras' },
       { label: 'Pagos en Cuenta Corriente', to: '/pagos' },
     ]
   },
   {
     label: 'Reportes', icon: FileText, children: [
-      { label: 'Costo Materia Prima', to: '/reportes/costo-materia-prima' },
-      { label: 'Planning', to: '/planning' },
-      { label: 'Producción', to: '/reportes/produccion' },
       { label: 'Ventas', to: '/reportes/ventas' },
-      { label: 'Precio Productos', to: '/reportes/precio-productos' },
-      { label: 'Estimaciones', to: '/reportes/estimaciones' },
       { label: 'Libro IVA Compras', to: '/reportes/libro-iva-compras' },
       { label: 'Saldos de Proveedores', to: '/reportes/saldos-proveedores' },
       { label: 'Cuenta Corriente de Proveedor', to: '/reportes/cuenta-corriente-proveedor' },

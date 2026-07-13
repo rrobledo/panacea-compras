@@ -26,14 +26,7 @@ import { OrdenCompraEditPage } from './pages/ordenes-compra/OrdenCompraEditPage'
 import { ItemsGastoPage } from './pages/items-gasto/ItemsGastoPage';
 import { ItemGastoCreatePage } from './pages/items-gasto/ItemGastoCreatePage';
 import { ItemGastoEditPage } from './pages/items-gasto/ItemGastoEditPage';
-import { PlanningPage } from './pages/planning/PlanningPage';
-import { ProgramacionPage } from './pages/programacion/ProgramacionPage';
-import { ProduccionPage } from './pages/reportes/ProduccionPage';
 import { VentasPage } from './pages/reportes/VentasPage';
-import { PrecioProductosPage } from './pages/reportes/PrecioProductosPage';
-import { EstimacionesPage } from './pages/reportes/EstimacionesPage';
-import { CostosMateriaPrimaPage } from './pages/reportes/CostosMateriaPrimaPage';
-import { CostosMateriaPrimaDetailPage } from './pages/reportes/CostosMateriaPrimaDetailPage';
 import { LibroIvaPage } from './pages/reportes/LibroIvaPage';
 import { SaldosProveedoresPage } from './pages/reportes/SaldosProveedoresPage';
 import { SaldosProveedoresDetailPage } from './pages/reportes/SaldosProveedoresDetailPage';
@@ -107,17 +100,8 @@ function App() {
                     <Route path="/items-gasto/create"     element={<ItemGastoCreatePage />} />
                     <Route path="/items-gasto/:id/edit"   element={<ItemGastoEditPage />} />
 
-                    {/* PLANNING / PROGRAMACION */}
-                    <Route path="/planning"      element={<PlanningPage />} />
-                    <Route path="/programacion"  element={<ProgramacionPage />} />
-
                     {/* REPORTES DE COSTOS */}
-                    <Route path="/reportes/produccion"              element={<ProduccionPage />} />
                     <Route path="/reportes/ventas"                  element={<VentasPage />} />
-                    <Route path="/reportes/precio-productos"        element={<PrecioProductosPage />} />
-                    <Route path="/reportes/estimaciones"            element={<EstimacionesPage />} />
-                    <Route path="/reportes/costo-materia-prima"     element={<CostosMateriaPrimaPage />} />
-                    <Route path="/reportes/costo-materia-prima/:id" element={<CostosMateriaPrimaDetailPage />} />
                     <Route path="/reportes/libro-iva-compras"       element={<LibroIvaPage />} />
                     <Route path="/reportes/saldos-proveedores"      element={<SaldosProveedoresPage />} />
                     <Route path="/reportes/saldos-proveedores/:proveedorId" element={<SaldosProveedoresDetailPage />} />
