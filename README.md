@@ -1,4 +1,4 @@
-# Panacea Producción
+# Panacea Compras
 
 Frontend de gestión de costos, proveedores, producción y planificación para Panacea, construido con React 19 + Vite. Consume la API en `https://panacea-produccion-backend.vercel.app`.
 

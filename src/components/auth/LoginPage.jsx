@@ -50,7 +50,7 @@ export const LoginPage = () => {
       <div className="auth-card">
         <div className="auth-logo">
           <div className="logo-icon" style={{ width: 48, height: 48, fontSize: 22 }}>P</div>
-          <h1>Panacea Producción</h1>
+          <h1>Panacea Compras</h1>
         </div>
 
         <h2 className="auth-title">Iniciar sesión</h2>

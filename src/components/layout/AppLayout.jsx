@@ -96,8 +96,8 @@ export const AppLayout = ({ children }) => {
       <aside className={`sidebar ${sidebarOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-header">
           <div className="logo">
-            <div className="logo-icon">E</div>
-            {!collapsed && <span className="logo-text">EnterpriseApp</span>}
+            <div className="logo-icon">P</div>
+            {!collapsed && <span className="logo-text">Panacea Compras</span>}
           </div>
           <button className="btn btn-ghost btn-icon hide-mobile" onClick={() => setCollapsed(c => !c)}>
             <Menu size={16} />
