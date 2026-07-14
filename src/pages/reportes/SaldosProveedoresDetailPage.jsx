@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Eye } from 'lucide-react';
 import { DataGrid } from '../../components/grid/DataGrid';
 import { PageLoader, ErrorState } from '../../components/ui';
+import { CompraDetailModal } from '../compras/CompraDetailModal';
 import { useFetch, useList } from '../../hooks';
 import { formatCurrencyARS } from '../../utils/format';
 import { getErrorMessage } from '../../utils/errorMessage';
@@ -10,6 +12,7 @@ export const SaldosProveedoresDetailPage = () => {
   const { proveedorId } = useParams();
   const navigate = useNavigate();
   const [form, setForm] = useState({ fecha_desde: '', fecha_hasta: '' });
+  const [detailCompraId, setDetailCompraId] = useState(null);
 
   const { data: proveedor, loading: loadingProveedor, error: errorProveedor } = useFetch(`/costos/proveedores/${proveedorId}`);
   const { items, loading, error, refetch, filter } = useList('/costos/compras', {
@@ -30,6 +33,14 @@ export const SaldosProveedoresDetailPage = () => {
     { accessorKey: 'numero', header: 'Número' },
     { accessorKey: 'total', header: 'Total', cell: ({ getValue }) => formatCurrencyARS(getValue()) },
     { accessorKey: 'saldo_pendiente', header: 'Saldo Pendiente', cell: ({ getValue }) => formatCurrencyARS(getValue()) },
+    {
+      id: 'actions', header: '',
+      cell: ({ row }) => (
+        <button className="btn btn-ghost btn-sm" onClick={() => setDetailCompraId(row.original.id)}>
+          <Eye size={14} /> Ver Detalle
+        </button>
+      ),
+    },
   ];
 
   return (
@@ -69,6 +80,12 @@ export const SaldosProveedoresDetailPage = () => {
           emptyText="Este proveedor no tiene comprobantes con saldo pendiente para el filtro seleccionado"
         />
       )}
+
+      <CompraDetailModal
+        open={!!detailCompraId}
+        onClose={() => setDetailCompraId(null)}
+        compraId={detailCompraId}
+      />
     </div>
   );
 };
