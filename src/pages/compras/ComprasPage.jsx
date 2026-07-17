@@ -7,7 +7,7 @@ import { EntityPicker } from '../../components/form/EntityPicker';
 import { useList, useFetch, useMutation, useConfirm } from '../../hooks';
 import { api } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
-import { formatCurrencyARS } from '../../utils/format';
+import { formatCurrencyARS, formatDateTime } from '../../utils/format';
 import { ESTADOS_COMPRA } from './constants';
 import { getErrorMessage } from '../../utils/errorMessage';
 
@@ -57,6 +57,7 @@ export const ComprasPage = () => {
     { accessorKey: 'estado', header: 'Estado' },
     { accessorKey: 'total', header: 'Total', cell: ({ getValue }) => formatCurrencyARS(getValue()) },
     { accessorKey: 'saldo_pendiente', header: 'Saldo Pendiente', cell: ({ getValue }) => formatCurrencyARS(getValue()) },
+    { accessorKey: 'created_at', header: 'Creado', cell: ({ getValue }) => formatDateTime(getValue()) },
     {
       id: 'actions', header: '',
       cell: ({ row }) => (

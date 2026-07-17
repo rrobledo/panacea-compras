@@ -5,7 +5,7 @@ import { DataGrid } from '../../components/grid/DataGrid';
 import { PageLoader, ErrorState } from '../../components/ui';
 import { ComprobantesAplicadosModal } from './ComprobantesAplicadosModal';
 import { useList } from '../../hooks';
-import { formatCurrencyARS } from '../../utils/format';
+import { formatCurrencyARS, formatDateTime } from '../../utils/format';
 import { getErrorMessage } from '../../utils/errorMessage';
 
 const startOfMonth = () => {
@@ -27,6 +27,7 @@ export const PagosPage = () => {
     { accessorKey: 'proveedor_nombre', header: 'Proveedor' },
     { accessorKey: 'importe', header: 'Importe', cell: ({ getValue }) => formatCurrencyARS(getValue()) },
     { accessorKey: 'estado', header: 'Estado' },
+    { accessorKey: 'created_at', header: 'Creado', cell: ({ getValue }) => formatDateTime(getValue()) },
     {
       id: 'actions', header: '',
       cell: ({ row }) => (
