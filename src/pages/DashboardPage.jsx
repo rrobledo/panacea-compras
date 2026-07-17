@@ -1,4 +1,4 @@
-import { DollarSign, AlertCircle, TrendingUp } from 'lucide-react';
+import { DollarSign, AlertCircle, TrendingUp, Wallet } from 'lucide-react';
 import { KpiCard, DonutChart, GroupedBarChart } from '../components/charts';
 import { PageLoader } from '../components/ui';
 import { useFetch } from '../hooks';
@@ -36,9 +36,10 @@ export const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="grid-3" style={{ marginBottom: 24 }}>
+      <div className="grid-4" style={{ marginBottom: 24 }}>
         <KpiCard label="Facturas Pendientes" value={formatCurrencyARS(summary?.total_facturas_pendientes)} icon={AlertCircle} color="#d97706" />
         <KpiCard label="Gastos del Mes" value={formatCurrencyARS(summary?.total_gastos)} icon={DollarSign} color="#dc2626" />
+        <KpiCard label="Pagos del Mes" value={formatCurrencyARS(summary?.total_pagos)} icon={Wallet} color="#2563eb" />
         <KpiCard label="Ventas del Mes" value={formatCurrencyARS(totalVentasMes)} icon={TrendingUp} color="#16a34a" />
       </div>
 
