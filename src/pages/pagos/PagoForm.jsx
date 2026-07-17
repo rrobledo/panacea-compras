@@ -37,7 +37,7 @@ export const PagoForm = ({ initialData, onSubmit }) => {
   const proveedorId = useWatch({ control, name: 'proveedor_id' });
 
   const { data: comprasProveedor, loading: loadingCompras } = useFetch(
-    proveedorId ? '/costos/compras' : null, { proveedor_id: proveedorId }, [proveedorId],
+    proveedorId ? '/costos/compras' : null, { proveedor_id: proveedorId, con_saldo: true }, [proveedorId],
   );
   const pendientes = (comprasProveedor?.items || comprasProveedor || [])
     .filter(c => ESTADOS_APLICABLES.has(c.estado));
