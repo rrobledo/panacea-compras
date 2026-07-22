@@ -102,12 +102,21 @@ export const PagoForm = ({ initialData, onSubmit }) => {
                         <td>{c.numero}</td>
                         <td>{formatCurrencyARS(c.saldo_pendiente)}</td>
                         <td>
-                          <input
-                            type="number" step="0.01" min="0" max={c.saldo_pendiente}
-                            className="form-input" style={{ width: 120 }}
-                            value={aplicarImportes[c.id] || ''}
-                            onChange={e => setImporteAplicar(c.id, e.target.value)}
-                          />
+                          <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                            <input
+                              type="number" step="0.01" min="0" max={c.saldo_pendiente}
+                              className="form-input" style={{ width: 120 }}
+                              value={aplicarImportes[c.id] || ''}
+                              onChange={e => setImporteAplicar(c.id, e.target.value)}
+                            />
+                            <button
+                              type="button" className="btn btn-ghost btn-sm"
+                              title="Copiar saldo pendiente"
+                              onClick={() => setImporteAplicar(c.id, c.saldo_pendiente)}
+                            >
+                              Copiar
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
