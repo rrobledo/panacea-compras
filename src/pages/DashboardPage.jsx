@@ -3,6 +3,12 @@ import { KpiCard, DonutChart, GroupedBarChart } from '../components/charts';
 import { PageLoader } from '../components/ui';
 import { useFetch } from '../hooks';
 import { formatCurrencyARS } from '../utils/format';
+import { CATEGORIAS_COMPRA } from './compras/constants';
+
+const porCategoriaToChartData = (rows) => (rows || []).map(r => ({
+  name: CATEGORIAS_COMPRA.find(c => c.value === r.categoria)?.label || r.categoria,
+  value: r.total,
+}));
 
 const now = new Date();
 const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
@@ -27,6 +33,9 @@ export const DashboardPage = () => {
     .map(r => ({ name: r.cliente, value: r.subtotal ?? 0 }));
   const totalVentasMes = ventasData.reduce((sum, r) => sum + r.value, 0);
 
+  const gastosPorCategoriaData = porCategoriaToChartData(summary?.gastos_por_categoria);
+  const pagosPorCategoriaData = porCategoriaToChartData(summary?.pagos_por_categoria);
+
   return (
     <div>
       <div className="page-header">
@@ -46,6 +55,11 @@ export const DashboardPage = () => {
       <div className="grid-2">
         <GroupedBarChart data={categoriaData} keys={['Planeado', 'Producido']} title="Producción por Categoría" />
         <DonutChart data={ventasData} title="Ventas por Cliente" />
+      </div>
+
+      <div className="grid-2" style={{ marginTop: 24 }}>
+        <DonutChart data={gastosPorCategoriaData} title="Gastos del Mes por Categoría" />
+        <DonutChart data={pagosPorCategoriaData} title="Pagos del Mes por Categoría" />
       </div>
     </div>
   );
