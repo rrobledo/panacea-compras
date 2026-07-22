@@ -31,6 +31,8 @@ const NAV = [
       { label: 'Libro IVA Compras', to: '/reportes/libro-iva-compras' },
       { label: 'Saldos de Proveedores', to: '/reportes/saldos-proveedores' },
       { label: 'Cuenta Corriente de Proveedor', to: '/reportes/cuenta-corriente-proveedor' },
+      { label: 'Gastos por Proveedor', to: '/reportes/gastos-por-proveedor' },
+      { label: 'Pagos por Proveedor', to: '/reportes/pagos-por-proveedor' },
     ]
   },
 ];
