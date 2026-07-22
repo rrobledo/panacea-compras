@@ -22,7 +22,7 @@ export const ComprasPage = () => {
   const toast = useToast();
   const { confirm, dialog, resolve } = useConfirm();
 
-  const [form, setForm] = useState({ fecha_desde: startOfMonth(), fecha_hasta: today(), estado: 'TODOS', proveedor_id: null });
+  const [form, setForm] = useState({ fecha_desde: startOfMonth(), fecha_hasta: today(), estado: 'TODOS', categoria: 'TODOS', proveedor_id: null });
 
   const { items, loading, error, refetch, filter } = useList('/costos/compras', { ...form });
   const { data: resumen, refetch: refetchResumen } = useFetch('/costos/cuenta-corriente/resumen', {
@@ -35,7 +35,10 @@ export const ComprasPage = () => {
   });
 
   const applyFilters = () => {
-    filter({ fecha_desde: form.fecha_desde, fecha_hasta: form.fecha_hasta, estado: form.estado, proveedor_id: form.proveedor_id });
+    filter({
+      fecha_desde: form.fecha_desde, fecha_hasta: form.fecha_hasta,
+      estado: form.estado, categoria: form.categoria, proveedor_id: form.proveedor_id,
+    });
     refetchResumen({ fecha_desde: form.fecha_desde, fecha_hasta: form.fecha_hasta });
   };
 
@@ -102,6 +105,14 @@ export const ComprasPage = () => {
             <select className="form-select" value={form.estado}
               onChange={e => setForm(f => ({ ...f, estado: e.target.value }))}>
               {ESTADOS_COMPRA.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
+          </div>
+          <div className="form-group field-w-md">
+            <label className="form-label">Categoría</label>
+            <select className="form-select" value={form.categoria}
+              onChange={e => setForm(f => ({ ...f, categoria: e.target.value }))}>
+              <option value="TODOS">Todos</option>
+              {CATEGORIAS_COMPRA.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </div>
           <Field label="Proveedor" size="md">
