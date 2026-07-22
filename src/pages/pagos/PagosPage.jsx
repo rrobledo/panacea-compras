@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, FileText } from 'lucide-react';
 import { DataGrid } from '../../components/grid/DataGrid';
-import { PageLoader, ErrorState } from '../../components/ui';
+import { ConfirmDialog, PageLoader, ErrorState } from '../../components/ui';
 import { ComprobantesAplicadosModal } from './ComprobantesAplicadosModal';
-import { useList } from '../../hooks';
+import { useList, useMutation, useConfirm } from '../../hooks';
+import { api } from '../../services/api';
+import { useToast } from '../../context/ToastContext';
 import { formatCurrencyARS, formatDateTime } from '../../utils/format';
 import { getErrorMessage } from '../../utils/errorMessage';
 
@@ -16,11 +18,26 @@ const today = () => new Date().toISOString().slice(0, 10);
 
 export const PagosPage = () => {
   const navigate = useNavigate();
+  const toast = useToast();
+  const { confirm, dialog, resolve } = useConfirm();
   const [form, setForm] = useState({ fecha_desde: startOfMonth(), fecha_hasta: today() });
   const { items, loading, error, refetch, filter } = useList('/costos/pagos', { ...form });
   const [comprobantesPago, setComprobantesPago] = useState(null);
 
   const applyFilters = () => filter({ fecha_desde: form.fecha_desde, fecha_hasta: form.fecha_hasta });
+
+  const { mutate: remove } = useMutation((id) => api.delete(`/costos/pagos/${id}`), {
+    onSuccess: () => { toast.success('Pago eliminado correctamente'); refetch(); },
+    onError: () => toast.error('Error al eliminar el pago'),
+  });
+
+  const handleDelete = async (row) => {
+    const ok = await confirm({
+      title: 'Confirmar eliminación',
+      message: 'Si el pago tiene aplicaciones a comprobantes, se van a revertir (el saldo pendiente de esos comprobantes vuelve a subir). ¿Está seguro que desea borrar este pago?',
+    });
+    if (ok) remove(row.id);
+  };
 
   const columns = [
     { accessorKey: 'fecha', header: 'Fecha' },
@@ -31,9 +48,12 @@ export const PagosPage = () => {
     {
       id: 'actions', header: '',
       cell: ({ row }) => (
-        <button className="btn btn-ghost btn-sm" onClick={() => setComprobantesPago(row.original)}>
-          <FileText size={14} /> Comprobantes Aplicados
-        </button>
+        <div className="flex items-center gap-2">
+          <button className="btn btn-ghost btn-sm" onClick={() => setComprobantesPago(row.original)}>
+            <FileText size={14} /> Comprobantes Aplicados
+          </button>
+          <button className="btn btn-ghost btn-sm text-danger" onClick={() => handleDelete(row.original)}>Eliminar</button>
+        </div>
       ),
     },
   ];
@@ -77,6 +97,14 @@ export const PagosPage = () => {
         open={!!comprobantesPago}
         onClose={() => setComprobantesPago(null)}
         pago={comprobantesPago}
+      />
+
+      <ConfirmDialog
+        open={!!dialog}
+        title={dialog?.title}
+        message={dialog?.message}
+        onConfirm={() => resolve(true)}
+        onCancel={() => resolve(false)}
       />
     </div>
   );
