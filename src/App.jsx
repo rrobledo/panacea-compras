@@ -32,7 +32,9 @@ import { SaldosProveedoresPage } from './pages/reportes/SaldosProveedoresPage';
 import { SaldosProveedoresDetailPage } from './pages/reportes/SaldosProveedoresDetailPage';
 import { CuentaCorrienteProveedorPage } from './pages/reportes/CuentaCorrienteProveedorPage';
 import { GastosPorProveedorPage } from './pages/reportes/GastosPorProveedorPage';
+import { GastosPorProveedorDetailPage } from './pages/reportes/GastosPorProveedorDetailPage';
 import { PagosPorProveedorPage } from './pages/reportes/PagosPorProveedorPage';
+import { PagosPorProveedorDetailPage } from './pages/reportes/PagosPorProveedorDetailPage';
 import './index.css';
 
 const PrivateRoute = ({ children }) => {
@@ -109,7 +111,9 @@ function App() {
                     <Route path="/reportes/saldos-proveedores/:proveedorId" element={<SaldosProveedoresDetailPage />} />
                     <Route path="/reportes/cuenta-corriente-proveedor" element={<CuentaCorrienteProveedorPage />} />
                     <Route path="/reportes/gastos-por-proveedor"       element={<GastosPorProveedorPage />} />
+                    <Route path="/reportes/gastos-por-proveedor/:proveedorId" element={<GastosPorProveedorDetailPage />} />
                     <Route path="/reportes/pagos-por-proveedor"        element={<PagosPorProveedorPage />} />
+                    <Route path="/reportes/pagos-por-proveedor/:proveedorId" element={<PagosPorProveedorDetailPage />} />
 
                     <Route path="*" element={<NotFound />} />
                   </Routes>

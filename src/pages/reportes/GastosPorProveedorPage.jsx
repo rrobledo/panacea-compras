@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Eye } from 'lucide-react';
 import { DataGrid } from '../../components/grid/DataGrid';
 import { ErrorState } from '../../components/ui';
 import { useFetch } from '../../hooks';
@@ -12,6 +14,7 @@ const startOfMonth = () => {
 const today = () => new Date().toISOString().slice(0, 10);
 
 export const GastosPorProveedorPage = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ fecha_desde: startOfMonth(), fecha_hasta: today() });
 
   const { data, loading, error, refetch } = useFetch('/costos/cuenta-corriente/gastos-por-proveedor', {
@@ -22,9 +25,21 @@ export const GastosPorProveedorPage = () => {
 
   const proveedores = data?.proveedores || [];
 
+  const verDetalle = (proveedorId) => navigate(
+    `/reportes/gastos-por-proveedor/${proveedorId}?fecha_desde=${form.fecha_desde}&fecha_hasta=${form.fecha_hasta}`,
+  );
+
   const columns = [
     { accessorKey: 'proveedor_nombre', header: 'Proveedor' },
     { accessorKey: 'total', header: 'Total Gastado', cell: ({ getValue }) => formatCurrencyARS(getValue()) },
+    {
+      id: 'actions', header: '',
+      cell: ({ row }) => (
+        <button className="btn btn-ghost btn-sm" onClick={() => verDetalle(row.original.proveedor_id)}>
+          <Eye size={14} /> Ver Detalle
+        </button>
+      ),
+    },
   ];
 
   return (
