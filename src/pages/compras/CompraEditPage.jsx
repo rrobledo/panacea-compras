@@ -36,11 +36,11 @@ export const CompraEditPage = () => {
     setSaving(true);
     // orden_compra_id is create-only on the backend (not part of CompraUpdate) — omit it here.
     const {
-      proveedor_id, tipo_comprobante, punto_venta, numero, fecha, fecha_vencimiento, condicion_pago,
+      proveedor_id, tipo_comprobante, punto_venta, numero, fecha, fecha_vencimiento, condicion_pago, categoria,
       descuento_general, importe_exento, importe_no_gravado, observaciones,
     } = values;
     const payload = {
-      proveedor_id, tipo_comprobante, punto_venta, numero, fecha, fecha_vencimiento, condicion_pago,
+      proveedor_id, tipo_comprobante, punto_venta, numero, fecha, fecha_vencimiento, condicion_pago, categoria,
       descuento_general: Number(descuento_general || 0),
       importe_exento: Number(importe_exento || 0),
       importe_no_gravado: Number(importe_no_gravado || 0),

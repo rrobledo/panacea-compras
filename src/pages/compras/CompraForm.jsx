@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { Field } from '../../components/ui';
 import { EntityPicker } from '../../components/form/EntityPicker';
 import { api } from '../../services/api';
-import { TIPOS_COMPROBANTE, CONDICIONES_PAGO } from './constants';
+import { TIPOS_COMPROBANTE, CONDICIONES_PAGO, CATEGORIAS_COMPRA } from './constants';
 
 const schema = z.object({
   proveedor_id: z.union([z.string(), z.number()]).nullable().refine(v => v !== null && v !== '', 'Seleccione un proveedor'),
@@ -15,6 +15,7 @@ const schema = z.object({
   fecha: z.string().min(1, 'Ingrese la fecha'),
   fecha_vencimiento: z.string().min(1, 'Ingrese la fecha de vencimiento'),
   condicion_pago: z.string().min(1, 'Seleccione la condición de pago'),
+  categoria: z.string().min(1, 'Seleccione la categoría'),
   orden_compra_id: z.union([z.string(), z.number()]).nullable().optional(),
   descuento_general: z.string().optional(),
   importe_exento: z.string().optional(),
@@ -33,7 +34,7 @@ export const CompraForm = ({ initialData, onSubmit, onOrdenCompraSelect, onValue
     defaultValues: {
       proveedor_id: null, tipo_comprobante: 'FACTURA_A', punto_venta: '', numero: '',
       fecha: today, fecha_vencimiento: today,
-      condicion_pago: 'CUENTA_CORRIENTE', orden_compra_id: null,
+      condicion_pago: 'CUENTA_CORRIENTE', categoria: 'MATERIA_PRIMA', orden_compra_id: null,
       descuento_general: '0', importe_exento: '0', importe_no_gravado: '0', observaciones: '',
       ...initialData,
     },
@@ -112,6 +113,11 @@ export const CompraForm = ({ initialData, onSubmit, onOrdenCompraSelect, onValue
           <Field label="Condición de Pago" required error={errors.condicion_pago?.message} size="md">
             <select {...register('condicion_pago')} className="form-select">
               {CONDICIONES_PAGO.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
+          </Field>
+          <Field label="Categoría" required error={errors.categoria?.message} size="md">
+            <select {...register('categoria')} className="form-select">
+              {CATEGORIAS_COMPRA.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
             </select>
           </Field>
           {!initialData?.id && (

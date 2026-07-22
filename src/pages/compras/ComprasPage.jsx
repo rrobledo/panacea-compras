@@ -8,7 +8,7 @@ import { useList, useFetch, useMutation, useConfirm } from '../../hooks';
 import { api } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { formatCurrencyARS, formatDateTime } from '../../utils/format';
-import { ESTADOS_COMPRA } from './constants';
+import { ESTADOS_COMPRA, CATEGORIAS_COMPRA } from './constants';
 import { getErrorMessage } from '../../utils/errorMessage';
 
 const startOfMonth = () => {
@@ -54,6 +54,10 @@ export const ComprasPage = () => {
     { accessorKey: 'tipo_comprobante', header: 'Tipo de Comprobante' },
     { accessorKey: 'proveedor_nombre', header: 'Proveedor' },
     { accessorKey: 'numero', header: 'Número' },
+    {
+      accessorKey: 'categoria', header: 'Categoría',
+      cell: ({ getValue }) => CATEGORIAS_COMPRA.find(c => c.value === getValue())?.label || getValue(),
+    },
     { accessorKey: 'estado', header: 'Estado' },
     { accessorKey: 'total', header: 'Total', cell: ({ getValue }) => formatCurrencyARS(getValue()) },
     { accessorKey: 'saldo_pendiente', header: 'Saldo Pendiente', cell: ({ getValue }) => formatCurrencyARS(getValue()) },

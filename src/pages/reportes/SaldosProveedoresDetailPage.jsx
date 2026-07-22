@@ -4,6 +4,7 @@ import { Eye } from 'lucide-react';
 import { DataGrid } from '../../components/grid/DataGrid';
 import { PageLoader, ErrorState } from '../../components/ui';
 import { CompraDetailModal } from '../compras/CompraDetailModal';
+import { CATEGORIAS_COMPRA } from '../compras/constants';
 import { useFetch, useList } from '../../hooks';
 import { formatCurrencyARS } from '../../utils/format';
 import { getErrorMessage } from '../../utils/errorMessage';
@@ -31,6 +32,10 @@ export const SaldosProveedoresDetailPage = () => {
     { accessorKey: 'fecha', header: 'Fecha' },
     { accessorKey: 'tipo_comprobante', header: 'Tipo de Comprobante' },
     { accessorKey: 'numero', header: 'Número' },
+    {
+      accessorKey: 'categoria', header: 'Categoría',
+      cell: ({ getValue }) => CATEGORIAS_COMPRA.find(c => c.value === getValue())?.label || getValue(),
+    },
     { accessorKey: 'total', header: 'Total', cell: ({ getValue }) => formatCurrencyARS(getValue()) },
     { accessorKey: 'saldo_pendiente', header: 'Saldo Pendiente', cell: ({ getValue }) => formatCurrencyARS(getValue()) },
     {

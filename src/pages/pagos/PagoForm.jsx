@@ -8,6 +8,7 @@ import { PagoMediosEditor } from './PagoMediosEditor';
 import { useFetch } from '../../hooks';
 import { formatCurrencyARS } from '../../utils/format';
 import { roundCurrency } from '../compras/compraTotals';
+import { CATEGORIAS_COMPRA } from '../compras/constants';
 
 const schema = z.object({
   proveedor_id: z.union([z.string(), z.number()]).nullable().refine(v => v !== null && v !== '', 'Seleccione un proveedor'),
@@ -94,12 +95,13 @@ export const PagoForm = ({ initialData, onSubmit }) => {
             ) : (
               <div className="table-container">
                 <table>
-                  <thead><tr><th>Fecha</th><th>Número</th><th>Saldo Pendiente</th><th>Importe a Aplicar</th></tr></thead>
+                  <thead><tr><th>Fecha</th><th>Número</th><th>Categoría</th><th>Saldo Pendiente</th><th>Importe a Aplicar</th></tr></thead>
                   <tbody>
                     {pendientes.map(c => (
                       <tr key={c.id}>
                         <td>{c.fecha}</td>
                         <td>{c.numero}</td>
+                        <td>{CATEGORIAS_COMPRA.find(cat => cat.value === c.categoria)?.label || c.categoria}</td>
                         <td>{formatCurrencyARS(c.saldo_pendiente)}</td>
                         <td>
                           <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
@@ -123,7 +125,7 @@ export const PagoForm = ({ initialData, onSubmit }) => {
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td colSpan={3} style={{ fontWeight: 700 }}>Total a Cubrir</td>
+                      <td colSpan={4} style={{ fontWeight: 700 }}>Total a Cubrir</td>
                       <td style={{ fontWeight: 700 }}>{formatCurrencyARS(totalACubrir)}</td>
                     </tr>
                   </tfoot>

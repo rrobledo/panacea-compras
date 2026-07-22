@@ -2,7 +2,7 @@ import { Package, Wallet } from 'lucide-react';
 import { Modal, EmptyState } from '../../components/ui';
 import { useFetch } from '../../hooks';
 import { formatCurrencyARS } from '../../utils/format';
-import { TIPOS_COMPROBANTE, CONDICIONES_PAGO, DETALLE_TIPOS, IMPUESTO_TIPOS } from './constants';
+import { TIPOS_COMPROBANTE, CONDICIONES_PAGO, CATEGORIAS_COMPRA, DETALLE_TIPOS, IMPUESTO_TIPOS } from './constants';
 
 /**
  * Read-only detail view of a Compra (`GET /costos/compras/{id}`), opened
@@ -58,6 +58,10 @@ export const CompraDetailModal = ({ open, onClose, compraId }) => {
             <div className="form-group field-w-sm">
               <div className="form-label">Condición de Pago</div>
               <div>{CONDICIONES_PAGO.find(c => c.value === compra.condicion_pago)?.label || compra.condicion_pago}</div>
+            </div>
+            <div className="form-group field-w-sm">
+              <div className="form-label">Categoría</div>
+              <div>{CATEGORIAS_COMPRA.find(c => c.value === compra.categoria)?.label || compra.categoria}</div>
             </div>
             <div className="form-group field-w-sm">
               <div className="form-label">Estado</div>

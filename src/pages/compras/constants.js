@@ -14,6 +14,21 @@ export const CONDICIONES_PAGO = [
   { value: 'CUENTA_CORRIENTE', label: 'Cuenta Corriente' },
 ];
 
+// Mismo vocabulario que usaba el legacy `costos_cuentacorrienteproveedor.categoria`
+// (panacea-front `cruds/facturas`) — el backend lo expone como string libre
+// (sin choices), pero se mantiene fijo acá para consistencia de datos.
+export const CATEGORIAS_COMPRA = [
+  { value: 'MATERIA_PRIMA', label: 'Materia Prima' },
+  { value: 'SUELDO', label: 'Sueldo' },
+  { value: 'MANTENIMIENTO', label: 'Mantenimiento' },
+  { value: 'DELIVERY', label: 'Delivery' },
+  { value: 'ALQUILERES', label: 'Alquileres' },
+  { value: 'IMPUESTOS', label: 'Impuestos' },
+  { value: 'HONORARIOS', label: 'Honorarios' },
+  { value: 'SERVICIOS', label: 'Servicios' },
+  { value: 'OTROS', label: 'Otros' },
+];
+
 export const ESTADOS_COMPRA = [
   { value: 'TODOS', label: 'Todos' },
   { value: 'PENDIENTE', label: 'Pendiente' },

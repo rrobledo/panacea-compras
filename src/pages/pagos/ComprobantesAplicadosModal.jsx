@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Eye, FileText } from 'lucide-react';
 import { Modal, EmptyState } from '../../components/ui';
 import { CompraDetailModal } from '../compras/CompraDetailModal';
+import { CATEGORIAS_COMPRA } from '../compras/constants';
 import { useFetch } from '../../hooks';
 import { api } from '../../services/api';
 import { formatCurrencyARS } from '../../utils/format';
@@ -65,7 +66,7 @@ export const ComprobantesAplicadosModal = ({ open, onClose, pago }) => {
           <table>
             <thead>
               <tr>
-                <th>Número</th><th>Proveedor</th><th>Fecha Comprobante</th><th>Importe Comprobante</th>
+                <th>Número</th><th>Proveedor</th><th>Fecha Comprobante</th><th>Categoría</th><th>Importe Comprobante</th>
                 <th>Importe Aplicado</th><th></th>
               </tr>
             </thead>
@@ -77,6 +78,7 @@ export const ComprobantesAplicadosModal = ({ open, onClose, pago }) => {
                     <td>{a.comprobante ?? compra?.numero ?? a.compra_id}</td>
                     <td>{compra?.proveedor_nombre ?? pago?.proveedor_nombre}</td>
                     <td>{compra?.fecha ?? '—'}</td>
+                    <td>{compra ? (CATEGORIAS_COMPRA.find(c => c.value === compra.categoria)?.label || compra.categoria) : '—'}</td>
                     <td>{compra ? formatCurrencyARS(compra.total) : '—'}</td>
                     <td>{formatCurrencyARS(a.importe)}</td>
                     <td>
