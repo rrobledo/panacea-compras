@@ -1,8 +1,11 @@
-import { Package, Wallet } from 'lucide-react';
+import { Package, Wallet, Paperclip, ExternalLink } from 'lucide-react';
 import { Modal, EmptyState } from '../../components/ui';
 import { useFetch } from '../../hooks';
 import { formatCurrencyARS } from '../../utils/format';
 import { TIPOS_COMPROBANTE, CONDICIONES_PAGO, CATEGORIAS_COMPRA, DETALLE_TIPOS, IMPUESTO_TIPOS } from './constants';
+
+const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+const isImageAdjunto = (a) => IMAGE_EXTENSIONS.includes((a.nombre || a.url || '').split('.').pop()?.toLowerCase());
 
 /**
  * Read-only detail view of a Compra (`GET /costos/compras/{id}`), opened
@@ -21,6 +24,7 @@ export const CompraDetailModal = ({ open, onClose, compraId }) => {
   const detalle = compra?.detalle || [];
   const impuestos = compra?.impuestos || [];
   const pagos = pagosAplicados || [];
+  const adjuntos = compra?.adjuntos || [];
 
   return (
     <Modal
@@ -126,6 +130,38 @@ export const CompraDetailModal = ({ open, onClose, compraId }) => {
               </div>
             </div>
           )}
+
+          <div style={{ marginTop: 20 }}>
+            <div className="form-label" style={{ marginBottom: 8 }}>Adjuntos</div>
+            {adjuntos.length === 0 ? (
+              <EmptyState icon={Paperclip} title="Sin adjuntos" description="Este comprobante no tiene archivos adjuntos." />
+            ) : (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+                {adjuntos.map(a => (
+                  <a
+                    key={a.id}
+                    href={a.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: 'block', border: '1px solid var(--gray-200)', borderRadius: 8, padding: 8, textDecoration: 'none' }}
+                  >
+                    {isImageAdjunto(a) ? (
+                      <img src={a.url} alt={a.nombre || 'Adjunto'} style={{ maxWidth: 160, maxHeight: 160, borderRadius: 6, display: 'block' }} />
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '20px 12px' }}>
+                        <Paperclip size={16} />
+                        <span style={{ fontSize: 13 }}>{a.nombre || 'Adjunto'}</span>
+                      </div>
+                    )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, marginTop: 6, color: 'var(--gray-500)' }}>
+                      <span>{a.nombre || 'Adjunto'}</span>
+                      <ExternalLink size={12} />
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
 
           <div style={{ marginTop: 20 }}>
             <div className="form-label" style={{ marginBottom: 8 }}>Pagos Aplicados</div>
