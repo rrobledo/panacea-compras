@@ -18,8 +18,25 @@ export const FileUploadField = ({ value, onChange, label, accept = 'image/*,.pdf
     if (file) onChange(file);
   };
 
+  const handlePaste = (e) => {
+    if (isPersisted) return;
+    const item = Array.from(e.clipboardData?.items || []).find(i => i.type.startsWith('image/'));
+    if (!item) return;
+    e.preventDefault();
+    const file = item.getAsFile();
+    if (!file) return;
+    // Clipboard images come in as "image.png" with no useful name; give them a timestamped one.
+    const named = new File([file], `pegado-${Date.now()}.${file.type.split('/')[1] || 'png'}`, { type: file.type });
+    handlePick(named);
+  };
+
   return (
-    <div className="form-group" style={{ border: '1px dashed var(--gray-300)', borderRadius: 8, padding: 12 }}>
+    <div
+      className="form-group"
+      style={{ border: '1px dashed var(--gray-300)', borderRadius: 8, padding: 12 }}
+      onPaste={handlePaste}
+      tabIndex={isPersisted ? undefined : 0}
+    >
       {label && <label className="form-label">{label}</label>}
       {isFile ? (
         <div className="flex items-center gap-2">
@@ -39,7 +56,7 @@ export const FileUploadField = ({ value, onChange, label, accept = 'image/*,.pdf
       ) : (
         <div style={{ textAlign: 'center', color: 'var(--gray-400)', fontSize: 13, marginBottom: 8 }}>
           <Paperclip size={20} style={{ margin: '0 auto 6px' }} />
-          <div>Seleccioná un archivo para adjuntar</div>
+          <div>Seleccioná un archivo o pegá una imagen (Ctrl+V)</div>
         </div>
       )}
       {!isPersisted && (
