@@ -19,7 +19,7 @@ const schema = z.object({
   categoria: z.string().min(1, 'Seleccione una categoría'),
   habilitado: z.boolean().default(true),
   is_producto: z.boolean().default(true),
-  ref_id: z.coerce.number({ message: 'Ingrese el ID de referencia' }),
+  ref_id: z.string().min(1, 'Ingrese el ID de referencia'),
   precio_actual: z.coerce.number({ message: 'Ingrese el precio' }),
   utilidad: z.coerce.number({ message: 'Ingrese la utilidad' }).min(0).max(100),
   lote_produccion: z.coerce.number({ message: 'Ingrese el lote' }).min(1),
