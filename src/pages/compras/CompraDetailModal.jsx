@@ -2,10 +2,10 @@ import { Package, Wallet, Paperclip, ExternalLink } from 'lucide-react';
 import { Modal, EmptyState } from '../../components/ui';
 import { useFetch } from '../../hooks';
 import { formatCurrencyARS } from '../../utils/format';
+import { isImageName } from '../../utils/attachments';
 import { TIPOS_COMPROBANTE, CONDICIONES_PAGO, CATEGORIAS_COMPRA, DETALLE_TIPOS, IMPUESTO_TIPOS } from './constants';
 
-const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
-const isImageAdjunto = (a) => IMAGE_EXTENSIONS.includes((a.nombre || a.url || '').split('.').pop()?.toLowerCase());
+const isImageAdjunto = (a) => isImageName(a.nombre || a.url);
 
 /**
  * Read-only detail view of a Compra (`GET /costos/compras/{id}`), opened

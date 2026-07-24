@@ -1,5 +1,6 @@
-import { useRef } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { Paperclip, X, ExternalLink } from 'lucide-react';
+import { isImageName } from '../../utils/attachments';
 
 /**
  * Stages a real `File` object for later multipart upload (via `POST
@@ -13,6 +14,13 @@ export const FileUploadField = ({ value, onChange, label, accept = 'image/*,.pdf
 
   const isFile = value instanceof File;
   const isPersisted = value && !isFile;
+
+  // Local object URL so a just-pasted/picked image previews the same way a
+  // persisted adjunto does in CompraDetailModal, before it's ever uploaded.
+  const filePreviewUrl = useMemo(() => (
+    isFile && value.type.startsWith('image/') ? URL.createObjectURL(value) : null
+  ), [isFile, value]);
+  useEffect(() => () => { if (filePreviewUrl) URL.revokeObjectURL(filePreviewUrl); }, [filePreviewUrl]);
 
   const handlePick = (file) => {
     if (file) onChange(file);
@@ -39,20 +47,48 @@ export const FileUploadField = ({ value, onChange, label, accept = 'image/*,.pdf
     >
       {label && <label className="form-label">{label}</label>}
       {isFile ? (
-        <div className="flex items-center gap-2">
-          <Paperclip size={16} />
-          <span style={{ fontSize: 13 }}>{value.name}</span>
-          <button type="button" className="btn btn-ghost btn-icon" onClick={() => onChange(null)}>
-            <X size={14} />
-          </button>
-        </div>
+        filePreviewUrl ? (
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <img src={filePreviewUrl} alt={value.name} style={{ maxWidth: 160, maxHeight: 160, borderRadius: 6, display: 'block' }} />
+            <button
+              type="button"
+              className="btn btn-ghost btn-icon"
+              style={{ position: 'absolute', top: 4, right: 4 }}
+              onClick={() => onChange(null)}
+            >
+              <X size={14} />
+            </button>
+            <div style={{ fontSize: 12, marginTop: 4, color: 'var(--gray-500)' }}>{value.name}</div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Paperclip size={16} />
+            <span style={{ fontSize: 13 }}>{value.name}</span>
+            <button type="button" className="btn btn-ghost btn-icon" onClick={() => onChange(null)}>
+              <X size={14} />
+            </button>
+          </div>
+        )
       ) : isPersisted ? (
-        <div className="flex items-center gap-2">
-          <Paperclip size={16} />
-          <a href={value.url} target="_blank" rel="noreferrer" style={{ fontSize: 13 }}>
-            {value.nombre || 'Adjunto'} <ExternalLink size={12} />
-          </a>
-        </div>
+        <a
+          href={value.url}
+          target="_blank"
+          rel="noreferrer"
+          style={{ display: 'block', width: 'fit-content', textDecoration: 'none' }}
+        >
+          {isImageName(value.nombre || value.url) ? (
+            <img src={value.url} alt={value.nombre || 'Adjunto'} style={{ maxWidth: 160, maxHeight: 160, borderRadius: 6, display: 'block' }} />
+          ) : (
+            <div className="flex items-center gap-2">
+              <Paperclip size={16} />
+              <span style={{ fontSize: 13 }}>{value.nombre || 'Adjunto'}</span>
+            </div>
+          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, marginTop: 4, color: 'var(--gray-500)' }}>
+            <span>{value.nombre || 'Adjunto'}</span>
+            <ExternalLink size={12} />
+          </div>
+        </a>
       ) : (
         <div style={{ textAlign: 'center', color: 'var(--gray-400)', fontSize: 13, marginBottom: 8 }}>
           <Paperclip size={20} style={{ margin: '0 auto 6px' }} />
