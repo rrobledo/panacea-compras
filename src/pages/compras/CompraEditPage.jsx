@@ -12,6 +12,7 @@ import { useStagedList } from '../../hooks/useStagedList';
 import { api } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import { getErrorMessage } from '../../utils/errorMessage';
+import { adjuntoUrl } from '../../utils/attachments';
 
 export const CompraEditPage = () => {
   const { id } = useParams();
@@ -101,7 +102,7 @@ export const CompraEditPage = () => {
   if (loading) return <PageLoader />;
   if (error) return <ErrorState message={getErrorMessage(error)} onRetry={refetch} />;
 
-  const existingAdjuntos = data?.adjuntos || [];
+  const existingAdjuntos = (data?.adjuntos || []).map(a => ({ ...a, url: adjuntoUrl(`/costos/compras/${id}`, a.id) }));
 
   return (
     <div>

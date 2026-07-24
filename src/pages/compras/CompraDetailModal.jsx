@@ -2,7 +2,7 @@ import { Package, Wallet, Paperclip, ExternalLink } from 'lucide-react';
 import { Modal, EmptyState } from '../../components/ui';
 import { useFetch } from '../../hooks';
 import { formatCurrencyARS } from '../../utils/format';
-import { isImageName } from '../../utils/attachments';
+import { isImageName, adjuntoUrl } from '../../utils/attachments';
 import { TIPOS_COMPROBANTE, CONDICIONES_PAGO, CATEGORIAS_COMPRA, DETALLE_TIPOS, IMPUESTO_TIPOS } from './constants';
 
 const isImageAdjunto = (a) => isImageName(a.nombre || a.url);
@@ -24,7 +24,7 @@ export const CompraDetailModal = ({ open, onClose, compraId }) => {
   const detalle = compra?.detalle || [];
   const impuestos = compra?.impuestos || [];
   const pagos = pagosAplicados || [];
-  const adjuntos = compra?.adjuntos || [];
+  const adjuntos = (compra?.adjuntos || []).map(a => ({ ...a, url: adjuntoUrl(`/costos/compras/${compraId}`, a.id) }));
 
   return (
     <Modal

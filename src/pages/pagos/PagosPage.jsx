@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, FileText } from 'lucide-react';
+import { Plus, FileText, Eye } from 'lucide-react';
 import { DataGrid } from '../../components/grid/DataGrid';
 import { ConfirmDialog, PageLoader, ErrorState } from '../../components/ui';
 import { ComprobantesAplicadosModal } from './ComprobantesAplicadosModal';
+import { PagoDetailModal } from './PagoDetailModal';
 import { useList, useMutation, useConfirm } from '../../hooks';
 import { api } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
@@ -23,6 +24,7 @@ export const PagosPage = () => {
   const [form, setForm] = useState({ fecha_desde: startOfMonth(), fecha_hasta: today() });
   const { items, loading, error, refetch, filter } = useList('/costos/pagos', { ...form });
   const [comprobantesPago, setComprobantesPago] = useState(null);
+  const [detallePagoId, setDetallePagoId] = useState(null);
 
   const applyFilters = () => filter({ fecha_desde: form.fecha_desde, fecha_hasta: form.fecha_hasta });
 
@@ -49,6 +51,9 @@ export const PagosPage = () => {
       id: 'actions', header: '',
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
+          <button className="btn btn-ghost btn-sm" onClick={() => setDetallePagoId(row.original.id)}>
+            <Eye size={14} /> Ver Detalle
+          </button>
           <button className="btn btn-ghost btn-sm" onClick={() => setComprobantesPago(row.original)}>
             <FileText size={14} /> Comprobantes Aplicados
           </button>
@@ -97,6 +102,12 @@ export const PagosPage = () => {
         open={!!comprobantesPago}
         onClose={() => setComprobantesPago(null)}
         pago={comprobantesPago}
+      />
+
+      <PagoDetailModal
+        open={!!detallePagoId}
+        onClose={() => setDetallePagoId(null)}
+        pagoId={detallePagoId}
       />
 
       <ConfirmDialog
