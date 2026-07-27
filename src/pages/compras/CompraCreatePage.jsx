@@ -71,12 +71,19 @@ export const CompraCreatePage = () => {
 
     if (isContado) {
       try {
-        const pagoRes = await api.post('/costos/pagos', {
+        // The backend already settles a CONTADO compra in full at creation
+        // (saldo_pendiente=0, estado=PAGADO — see compra_service.create_compra),
+        // and a Pago's ledger entry is written unconditionally on creation
+        // regardless of whether it's ever applied (pago_service.create_pago).
+        // This Pago only exists to record which medios were used, so it must
+        // stay unapplied: POSTing it to /aplicaciones would fire the
+        // trg_update_compra_saldo_pendiente trigger and decrement an
+        // already-zeroed saldo_pendiente a second time, driving it negative.
+        await api.post('/costos/pagos', {
           proveedor_id: values.proveedor_id, fecha: values.fecha,
           observaciones: `Pago Contado — Comprobante ${values.numero}`,
           importe: mediosTotal, medios,
         });
-        await api.post(`/costos/pagos/${pagoRes.data.id}/aplicaciones`, [{ compra_id: compraId, importe: totals.total }]);
       } catch (e) {
         toast.error(e.response?.data?.detail || 'La compra se creó, pero el pago no se pudo registrar. Completalo desde la edición de la compra.');
         navigate(`/compras/${compraId}/edit`);
