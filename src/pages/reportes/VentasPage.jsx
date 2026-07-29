@@ -4,7 +4,7 @@ import { Printer } from 'lucide-react';
 import { useFetch } from '../../hooks';
 import { PageLoader, ErrorState } from '../../components/ui';
 import { formatCurrencyARS } from '../../utils/format';
-import { ANIOS, MESES_CON_TODOS } from './constants';
+import { ANIOS, MESES_CON_TODOS, CLIENTES_VENTAS } from './constants';
 import { getErrorMessage } from '../../utils/errorMessage';
 
 const now = new Date();
@@ -45,7 +45,9 @@ export const VentasPage = () => {
           </div>
           <div className="form-group field-w-md">
             <label className="form-label">Cliente</label>
-            <input className="form-input" value={filters.cliente} onChange={e => setFilters(f => ({ ...f, cliente: e.target.value }))} placeholder="Todos" />
+            <select className="form-select" value={filters.cliente} onChange={e => setFilters(f => ({ ...f, cliente: e.target.value }))}>
+              {CLIENTES_VENTAS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+            </select>
           </div>
           <div className="flex items-end">
             <button className="btn btn-primary" onClick={applyFilters}>Aplicar Filtros</button>
