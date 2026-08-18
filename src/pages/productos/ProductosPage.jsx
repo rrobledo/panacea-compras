@@ -10,7 +10,7 @@ import { getErrorMessage } from '../../utils/errorMessage';
 export const ProductosPage = () => {
   const navigate = useNavigate();
   const toast = useToast();
-  const { items, loading, error, refetch } = useList('/costos/productos');
+  const { items, loading, error, refetch } = useList('/costos/productos', { solo_habilitados: false });
   const { confirm, dialog, resolve } = useConfirm();
 
   const { mutate: remove } = useMutation((id) => api.delete(`/costos/productos/${id}`), {
