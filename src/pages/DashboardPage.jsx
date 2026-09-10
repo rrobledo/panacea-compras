@@ -56,17 +56,17 @@ export const DashboardPage = () => {
           <div className="page-title">Dashboard</div>
           <div className="page-subtitle">Resumen de producción y cuenta corriente de proveedores</div>
         </div>
-        <div className="form-row">
-          <div className="form-group field-w-md">
-            <label className="form-label">Mes</label>
-            <select className="form-select" value={mes} onChange={setPeriodoField('mes')}>
-              {MESES.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-            </select>
-          </div>
-          <div className="form-group field-w-xs">
+        <div className="flex gap-3" style={{ flexShrink: 0 }}>
+          <div className="form-group" style={{ width: 100 }}>
             <label className="form-label">Año</label>
             <select className="form-select" value={anio} onChange={setPeriodoField('anio')}>
               {ANIOS.map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+          </div>
+          <div className="form-group" style={{ width: 150 }}>
+            <label className="form-label">Mes</label>
+            <select className="form-select" value={mes} onChange={setPeriodoField('mes')}>
+              {MESES.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
             </select>
           </div>
         </div>
