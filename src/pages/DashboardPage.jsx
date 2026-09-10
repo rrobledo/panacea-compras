@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { DollarSign, AlertCircle, TrendingUp, Wallet } from 'lucide-react';
 import { KpiCard, DonutChart, GroupedBarChart } from '../components/charts';
 import { PageLoader } from '../components/ui';
 import { useFetch } from '../hooks';
 import { formatCurrencyARS } from '../utils/format';
 import { CATEGORIAS_COMPRA } from './compras/constants';
+import { ANIOS, MESES } from './reportes/constants';
 
 const porCategoriaToChartData = (rows) => (rows || []).map(r => ({
   name: CATEGORIAS_COMPRA.find(c => c.value === r.categoria)?.label || r.categoria,
@@ -11,15 +13,23 @@ const porCategoriaToChartData = (rows) => (rows || []).map(r => ({
 }));
 
 const now = new Date();
-const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
-const today = now.toISOString().slice(0, 10);
+const pad = (n) => String(n).padStart(2, '0');
+
+// Built from local date parts (not toISOString) so the range never slides a
+// day in negative-UTC-offset timezones like America/Argentina.
+const monthRange = (anio, mes) => ({
+  fecha_desde: `${anio}-${pad(mes)}-01`,
+  fecha_hasta: `${anio}-${pad(mes)}-${pad(new Date(anio, mes, 0).getDate())}`,
+});
 
 export const DashboardPage = () => {
-  const resumen = useFetch('/costos/cuenta-corriente/resumen', { fecha_desde: startOfMonth, fecha_hasta: today });
-  const categoria = useFetch('/costos/get_produccion_by_category', { anio: now.getFullYear(), mes: now.getMonth() + 1 });
-  const ventas = useFetch('/costos/get_ventas_por_cliente', { anio: now.getFullYear(), mes: now.getMonth() + 1 });
+  const [periodo, setPeriodo] = useState({ anio: now.getFullYear(), mes: now.getMonth() + 1 });
+  const { anio, mes } = periodo;
+  const resumen = useFetch('/costos/cuenta-corriente/resumen', monthRange(anio, mes), [anio, mes]);
+  const categoria = useFetch('/costos/get_produccion_by_category', { anio, mes }, [anio, mes]);
+  const ventas = useFetch('/costos/get_ventas_por_cliente', { anio, mes }, [anio, mes]);
 
-  if (resumen.loading || categoria.loading || ventas.loading) return <PageLoader />;
+  const loading = resumen.loading || categoria.loading || ventas.loading;
 
   const summary = Array.isArray(resumen.data) ? resumen.data[0] : resumen.data;
   const categoriaData = (categoria.data || []).map(r => ({ name: r.categoria, Planeado: r.planeado, Producido: r.producido }));
@@ -36,6 +46,9 @@ export const DashboardPage = () => {
   const gastosPorCategoriaData = porCategoriaToChartData(summary?.gastos_por_categoria);
   const pagosPorCategoriaData = porCategoriaToChartData(summary?.pagos_por_categoria);
 
+  const setPeriodoField = (field) => (e) =>
+    setPeriodo(p => ({ ...p, [field]: Number(e.target.value) }));
+
   return (
     <div>
       <div className="page-header">
@@ -43,8 +56,23 @@ export const DashboardPage = () => {
           <div className="page-title">Dashboard</div>
           <div className="page-subtitle">Resumen de producción y cuenta corriente de proveedores</div>
         </div>
+        <div className="form-row">
+          <div className="form-group field-w-md">
+            <label className="form-label">Mes</label>
+            <select className="form-select" value={mes} onChange={setPeriodoField('mes')}>
+              {MESES.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+            </select>
+          </div>
+          <div className="form-group field-w-xs">
+            <label className="form-label">Año</label>
+            <select className="form-select" value={anio} onChange={setPeriodoField('anio')}>
+              {ANIOS.map(y => <option key={y} value={y}>{y}</option>)}
+            </select>
+          </div>
+        </div>
       </div>
 
+      {loading ? <PageLoader /> : <>
       <div className="grid-4" style={{ marginBottom: 24 }}>
         <KpiCard label="Facturas Pendientes" value={formatCurrencyARS(summary?.total_facturas_pendientes)} icon={AlertCircle} color="#d97706" />
         <KpiCard label="Gastos del Mes" value={formatCurrencyARS(summary?.total_gastos)} icon={DollarSign} color="#dc2626" />
@@ -61,6 +89,7 @@ export const DashboardPage = () => {
         <DonutChart data={gastosPorCategoriaData} title="Gastos del Mes por Categoría" />
         <DonutChart data={pagosPorCategoriaData} title="Pagos del Mes por Categoría" />
       </div>
+      </>}
     </div>
   );
 };
